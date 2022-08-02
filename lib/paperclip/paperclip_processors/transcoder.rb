@@ -75,7 +75,7 @@ module Paperclip
         begin
           @cli.run
           log "Successfully transcoded #{@basename} to #{dst}"
-        rescue Cocaine::ExitStatusError => e
+        rescue Terrapin::ExitStatusError => e
           raise Paperclip::Error, "error while transcoding #{@basename}: #{e}" if @whiny
         end
       else
