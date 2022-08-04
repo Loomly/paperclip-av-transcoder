@@ -1,6 +1,6 @@
 module Paperclip
   class Transcoder < Processor
-    attr_accessor :geometry, :format, :whiny, :convert_options
+    attr_accessor :geometry, :format, :whiny, :convert_options, :runner_options
     # Creates a Video object set to work on the +file+ given. It
     # will attempt to transcode the video into one defined by +target_geometry+
     # which is a "WxH"-style string. +format+ should be specified.
@@ -14,6 +14,7 @@ module Paperclip
       @cli              = ::Av.cli
       @meta             = ::Av.cli.identify(@file.path)
       @whiny            = options[:whiny].nil? ? true : options[:whiny]
+      @runner_options   = options[:runner_options]
 
       @convert_options  = set_convert_options(options)
 
@@ -73,7 +74,7 @@ module Paperclip
         end
 
         begin
-          @cli.run
+          @cli.run(@runner_options)
           log "Successfully transcoded #{@basename} to #{dst}"
         rescue Terrapin::ExitStatusError => e
           raise Paperclip::Error, "error while transcoding #{@basename}: #{e}" if @whiny
